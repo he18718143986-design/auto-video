@@ -1,6 +1,6 @@
 # Auto Video (Minimal Runnable Skeleton)
 
-This is a local-first skeleton for browser-automation-assisted video generation.
+This repository (`auto-video-main`) contains a local-first skeleton for browser-automation-assisted video generation.
 
 It supports two modes:
 
@@ -26,13 +26,18 @@ npx playwright install chromium
 npm run run -- --topic "how kidneys work" --provider "browser-chat-provider" --reference "/absolute/path/reference.mov"
 ```
 
-To start the local Web UI:
+To start the local Web UI after the frontend has been built:
 
 ```bash
 npm run ui
 ```
 
 Then open `http://127.0.0.1:3210`.
+
+Notes:
+
+- `npm run ui` serves the built frontend from `ui/dist/`, so run `cd ui && npm run build` once before using it.
+- For frontend-only iteration, run `cd ui && npm run dev` in a second terminal while the backend is running.
 
 Required environment for Playwright mode:
 
@@ -82,12 +87,12 @@ npm run ui:mock
 ## Project Structure
 
 ```text
-auto-video/
+auto-video-main/
   prompts/               # Prompt templates
   runs/                  # Generated run artifacts
   ui/                    # React + Vite + TypeScript frontend (Tauri-ready)
   src/
-    browser/             # Browser-session checks (stub)
+    browser/             # Playwright session + page automation helpers
     config/              # UI-editable runtime configuration
     extractors/          # Raw-to-JSON helpers
     media/               # TTS + keyframe generation helpers
@@ -117,7 +122,7 @@ The current UI is a React + Vite SPA with five primary routes:
 1. `Home`: dashboard with active-run summary, recent runs, environment status, and quick actions.
 2. `New Run`: operator-first launch flow for topic, provider, reference path, launch profile, mock mode, and per-stage routing overrides.
 3. `Studio`: three-column monitoring workspace with run queue, tabbed main area (`Overview / Live Browser / Outputs / Timeline / Handoff`), and a right-side inspector.
-4. `Library`: searchable run history with a placeholder assets view for future expansion.
+4. `Library`: searchable run history plus a real asset browser for screenshots, media, text artifacts, and final outputs.
 5. `Settings`: system configuration hub with sub-tabs for `Browser Profiles`, `Stage Routing`, `Prompts`, `Selectors`, and `System`.
 
 Current operator controls:
@@ -126,7 +131,7 @@ Current operator controls:
 - `Continue Human`: resume the same run after login, CAPTCHA, or other manual intervention.
 - `Retry From Stage`: spawn a new run that reuses earlier artifacts and restarts from a selected stage.
 - `Live Browser Preview`: SSE-driven live screenshot preview for the active run.
-- `Selector Debugger`: probe configured selectors, capture screenshots, persist snapshots, and compare diffs across page changes.
+- `Selector Debugger`: probe configured selectors, capture screenshots, and persist snapshot history; the backend also exposes compare data for future diff-focused UI.
 - `Handoff Editor`: edit confirmation notes and checklist items before resuming a `needs_human` run.
 
 See [FRONTEND_INFORMATION_ARCHITECTURE.md](FRONTEND_INFORMATION_ARCHITECTURE.md) for the fuller page map and future Tauri-facing IA.
@@ -143,7 +148,7 @@ The UI reads and writes a local `auto-video.config.json` file.
 
 - `GET /api/runs` returns run summaries for the queue and dashboard.
 - `GET /api/runs/:runId` returns the canonical `RunManifest` used by the Studio route.
-- `GET /api/runs/:runId/details` returns richer artifact data (`manifest`, `textArtifacts`, `screenshots`, `mediaFiles`) for future detail panels and debugging tools.
+- `GET /api/runs/:runId/details` returns richer artifact data (`manifest`, `textArtifacts`, `screenshots`, `mediaFiles`) used by the current Studio Outputs and Library Assets views.
 
 ## Current Status
 
