@@ -10,6 +10,10 @@ runs/*
 ui/node_modules/
 ui/dist/
 ui/src-tauri/target/
+demo/node_modules/
+demo/ui/node_modules/
+demo/ui/dist/
+demo/ui/src-tauri/target/
 
 *.mov
 *.mp4
