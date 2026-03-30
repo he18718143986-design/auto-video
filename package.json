@@ -1,0 +1,31 @@
+{
+  "name": "auto-video",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Minimal runnable local skeleton for browser-automation-assisted video generation",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "dependencies": {
+    "fluent-ffmpeg": "^2.1.3"
+  },
+  "scripts": {
+    "run": "node --import tsx src/index.ts",
+    "demo": "node --import tsx src/index.ts --topic \"how kidneys work\" --provider \"browser-chat-provider\"",
+    "demo:mock": "AUTO_VIDEO_USE_MOCK=1 node --import tsx src/index.ts --topic \"how kidneys work\" --provider \"browser-chat-provider\"",
+    "ui": "node --import tsx src/web/server.ts",
+    "ui:mock": "AUTO_VIDEO_USE_MOCK=1 node --import tsx src/web/server.ts",
+    "ui:build": "cd ui && npm run build",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@types/fluent-ffmpeg": "^2.1.28",
+    "@types/node": "^22.15.21",
+    "playwright": "^1.53.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.8.3",
+    "vitest": "^4.1.2"
+  }
+}

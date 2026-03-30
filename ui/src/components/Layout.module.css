@@ -1,0 +1,148 @@
+/* Layout shell for the desktop app */
+
+.shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg-base);
+}
+
+/* ── Top bar ─────────────────────────────────────────────────────────── */
+
+.topBar {
+  height: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-lg);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  z-index: 100;
+  -webkit-app-region: drag; /* Tauri title-bar drag */
+}
+
+.topBarTitle {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  -webkit-app-region: no-drag;
+}
+
+.topBarRight {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  -webkit-app-region: no-drag;
+}
+
+.runIndicator {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* ── Body: sidebar + main ────────────────────────────────────────────── */
+
+.body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 200px;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  transition: width 0.15s ease;
+}
+
+.sidebarNav {
+  list-style: none;
+  padding: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease;
+}
+
+.navItem:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.navItem.active,
+.active {
+  background: var(--accent-muted);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.navItem svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.navItem.active svg,
+.active svg {
+  opacity: 1;
+}
+
+.navLabel {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Main content ────────────────────────────────────────────────────── */
+
+.main {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--bg-base);
+}
+
+/* ── Responsive: collapse sidebar on small viewports ─────────────────── */
+
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 56px;
+    min-width: 56px;
+  }
+
+  .navLabel {
+    display: none;
+  }
+
+  .navItem {
+    justify-content: center;
+    padding: var(--space-sm);
+  }
+}

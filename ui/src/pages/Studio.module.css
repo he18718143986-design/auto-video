@@ -1,0 +1,621 @@
+/* Studio — three-column layout with command bar */
+
+/* ── Page shell ──────────────────────────────────────────── */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── Command bar ─────────────────────────────────────────── */
+
+.commandBar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-lg);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  min-height: 44px;
+  flex-shrink: 0;
+}
+
+.commandInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.8125rem;
+  min-width: 0;
+}
+
+.commandTopic {
+  font-weight: 600;
+  color: var(--text-bright);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 280px;
+}
+
+.commandSep {
+  color: var(--text-muted);
+}
+
+.commandMeta {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.commandSpacer {
+  flex: 1;
+}
+
+.commandPills {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.commandActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* ── Three-column body ───────────────────────────────────── */
+
+.body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── Left: Run queue ─────────────────────────────────────── */
+
+.runQueue {
+  width: 280px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border);
+  background: var(--bg-surface);
+}
+
+.queueHeader {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.searchInput {
+  width: 100%;
+}
+
+.filterChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.filterChip {
+  padding: 2px var(--space-sm);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast),
+    border-color var(--transition-fast);
+  white-space: nowrap;
+  font-family: var(--font-sans);
+}
+
+.filterChip:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.filterChipActive {
+  background: var(--accent-muted);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.runList {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.runCard {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.runCard:hover {
+  background: var(--bg-hover);
+}
+
+.runCardActive {
+  border-color: var(--accent);
+  background: var(--accent-muted);
+}
+
+.runCardTopic {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-bright);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 2px;
+}
+
+.runCardRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.runCardStage {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.runCardTime {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+}
+
+/* ── Center: Main work area ──────────────────────────────── */
+
+.mainArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.tabs {
+  display: flex;
+  gap: 2px;
+  padding: var(--space-sm) var(--space-lg);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-elevated);
+  flex-shrink: 0;
+}
+
+.tab {
+  padding: var(--space-xs) var(--space-md);
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  white-space: nowrap;
+}
+
+.tab:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.tabActive {
+  background: var(--accent-muted);
+  color: var(--accent);
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.tabContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-lg);
+}
+
+/* ── Right: Inspector ────────────────────────────────────── */
+
+.inspector {
+  width: 300px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--border);
+  background: var(--bg-surface);
+  overflow-y: auto;
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.inspectorSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.inspectorLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.inspectorValue {
+  font-size: 0.8125rem;
+  color: var(--text-primary);
+}
+
+/* ── Overview tab ────────────────────────────────────────── */
+
+.overviewGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.overviewCard {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.overviewCardLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.overviewCardValue {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-bright);
+}
+
+/* ── Stage progress ──────────────────────────────────────── */
+
+.stageProgress {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: var(--space-md) 0;
+  flex-wrap: wrap;
+}
+
+.stageDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--bg-overlay);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.stageDotCompleted {
+  background: var(--status-success);
+  border-color: var(--status-success);
+}
+
+.stageDotCurrent {
+  background: var(--status-running);
+  border-color: var(--status-running);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+.stageDotFailed {
+  background: var(--status-error);
+  border-color: var(--status-error);
+}
+
+.stageDotHuman {
+  background: var(--status-warning);
+  border-color: var(--status-warning);
+}
+
+.stageConnector {
+  width: 12px;
+  height: 2px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+.stageConnectorDone {
+  background: var(--status-success);
+}
+
+.stageLabel {
+  font-size: 0.625rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: var(--space-xs);
+}
+
+/* ── Live browser tab ────────────────────────────────────── */
+
+.previewContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.previewImage {
+  max-width: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+
+.previewPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+
+/* ── Outputs tab ─────────────────────────────────────────── */
+
+.outputsHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-lg);
+}
+
+.outputsMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+/* ── Timeline tab ────────────────────────────────────────── */
+
+.timelineList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.timelineEntry {
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.timelineCompleted {
+  border-left: 3px solid var(--status-success);
+}
+
+.timelineFailed {
+  border-left: 3px solid var(--status-error);
+}
+
+.timelineHuman {
+  border-left: 3px solid var(--status-warning);
+}
+
+.timelineRunning {
+  border-left: 3px solid var(--status-running);
+}
+
+.timelineHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.timelineStage {
+  font-weight: 500;
+  font-size: 0.8125rem;
+  color: var(--text-bright);
+}
+
+.timelineTime {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.timelineMessage {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* ── Handoff tab ─────────────────────────────────────────── */
+
+.handoffForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  max-width: 600px;
+}
+
+.checklistHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.checklistItems {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.checklistItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.8125rem;
+  color: var(--text-primary);
+}
+
+.checklistItem input[type='checkbox'] {
+  flex-shrink: 0;
+}
+
+.checklistItemText {
+  flex: 1;
+}
+
+.checklistItemDone {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.checklistRemove {
+  padding: 2px;
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  border-radius: var(--radius-sm);
+}
+
+.checklistRemove:hover {
+  color: var(--status-error);
+  background: rgba(244, 63, 94, 0.1);
+}
+
+.handoffActions {
+  display: flex;
+  gap: var(--space-md);
+}
+
+/* ── No-run placeholder ──────────────────────────────────── */
+
+.noRun {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+/* ── Empty states ────────────────────────────────────────── */
+
+.empty {
+  padding: var(--space-xl);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+
+/* ── Loading ─────────────────────────────────────────────── */
+
+.loading {
+  padding: var(--space-xl);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+
+/* ── Error card ──────────────────────────────────────────── */
+
+.errorCard {
+  background: rgba(244, 63, 94, 0.06);
+  border: 1px solid rgba(244, 63, 94, 0.2);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+}
+
+.errorTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--status-error);
+  margin-bottom: var(--space-xs);
+}
+
+.errorMessage {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ── Retry select ────────────────────────────────────────── */
+
+.retryGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.retrySelect {
+  width: auto;
+  min-width: 140px;
+  font-size: 0.75rem;
+  padding: 2px var(--space-sm);
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+
+@media (max-width: 1200px) {
+  .inspector {
+    width: 240px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .runQueue {
+    width: 220px;
+  }
+
+  .inspector {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .runQueue {
+    display: none;
+  }
+
+  .commandInfo {
+    max-width: 200px;
+  }
+}

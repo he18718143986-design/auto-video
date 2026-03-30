@@ -1,0 +1,180 @@
+/* New Run page — two-panel form layout */
+
+.page {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── Left panel: form ─────────────────────────────────────── */
+
+.formPanel {
+  padding: var(--space-xl);
+  overflow-y: auto;
+}
+
+.formPanel h1 {
+  font-size: 1.25rem;
+  margin-bottom: var(--space-xs);
+}
+
+.formPanel > p {
+  font-size: 0.8125rem;
+  margin-bottom: var(--space-xl);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  max-width: 520px;
+}
+
+/* ── Advanced section ─────────────────────────────────────── */
+
+.advancedToggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: var(--space-xs) 0;
+  font-family: var(--font-sans);
+}
+
+.advancedToggle:hover {
+  color: var(--text-primary);
+}
+
+.advancedToggle svg {
+  transition: transform var(--transition-fast);
+}
+
+.advancedOpen svg {
+  transform: rotate(180deg);
+}
+
+.advancedBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding-top: var(--space-sm);
+}
+
+/* ── Submit area ──────────────────────────────────────────── */
+
+.submitArea {
+  padding-top: var(--space-md);
+}
+
+.submitError {
+  font-size: 0.75rem;
+  color: var(--status-error);
+  margin-top: var(--space-sm);
+}
+
+/* ── Right panel: preview ─────────────────────────────────── */
+
+.previewPanel {
+  background: var(--bg-surface);
+  border-left: 1px solid var(--border);
+  padding: var(--space-xl);
+  overflow-y: auto;
+}
+
+.previewPanel h2 {
+  font-size: 0.9375rem;
+  margin-bottom: var(--space-lg);
+}
+
+.previewSection {
+  margin-bottom: var(--space-lg);
+}
+
+.previewSection h3 {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin-bottom: var(--space-sm);
+}
+
+.previewList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.previewList li {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.previewList li::before {
+  content: '•';
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.routingTable {
+  width: 100%;
+  font-size: 0.75rem;
+}
+
+.routingTable td {
+  padding: var(--space-xs) var(--space-sm);
+}
+
+.routingTable td:first-child {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+
+.routingTable td:last-child {
+  color: var(--text-secondary);
+}
+
+.warningItem {
+  font-size: 0.8125rem;
+  color: var(--status-warning);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* ── Loading ──────────────────────────────────────────────── */
+
+.loading {
+  padding: var(--space-xl);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .page {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    overflow-y: auto;
+  }
+
+  .previewPanel {
+    border-left: none;
+    border-top: 1px solid var(--border);
+  }
+}

@@ -1,0 +1,224 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  min-height: 0;
+}
+
+.summaryRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.summaryChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+}
+
+.summaryNote {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.filterToggleActive {
+  border-color: rgba(59, 130, 246, 0.4);
+  background: rgba(59, 130, 246, 0.14);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+  gap: var(--space-lg);
+  min-height: 0;
+}
+
+.listPane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  min-height: 0;
+}
+
+.sectionCard {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.sectionTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.itemList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.itemButton {
+  width: 100%;
+  text-align: left;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.itemButton:hover {
+  background: var(--bg-hover);
+}
+
+.itemButtonActive {
+  border-color: var(--accent);
+  background: var(--accent-muted);
+}
+
+.itemLabel {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-bright);
+}
+
+.itemMeta {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.viewer {
+  min-height: 0;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.viewerHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-elevated);
+}
+
+.viewerTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.viewerTitle strong {
+  font-size: 0.9375rem;
+  color: var(--text-bright);
+}
+
+.viewerPath {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  word-break: break-all;
+}
+
+.viewerActions {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.viewerBody {
+  flex: 1;
+  overflow: auto;
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  min-height: 0;
+}
+
+.copyFeedback {
+  padding: 0 var(--space-lg) var(--space-sm);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.empty {
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: var(--text-muted);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-xl);
+}
+
+.imagePreview {
+  width: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-base);
+}
+
+.videoPreview {
+  width: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: #000;
+}
+
+.audioPreview {
+  width: 100%;
+}
+
+.textPreview {
+  margin: 0;
+  min-height: 360px;
+}
+
+.helperText {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+@media (max-width: 1200px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .itemList {
+    max-height: 180px;
+  }
+}

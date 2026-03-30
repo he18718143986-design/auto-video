@@ -1,0 +1,48 @@
+{
+  "defaultProfileId": "chatgpt",
+  "dailyRunLimit": 3,
+  "rotationMode": "round-robin",
+  "launchDefaults": {
+    "topic": "how kidneys work",
+    "provider": "browser-chat-provider",
+    "referencePath": "",
+    "useMock": true,
+    "stageProfileIds": {}
+  },
+  "profiles": [
+    {
+      "id": "chatgpt",
+      "name": "ChatGPT",
+      "webUrl": "https://chatgpt.com",
+      "promptSelector": "textarea",
+      "responseSelector": "[data-message-author-role=\"assistant\"]",
+      "uploadSelector": "input[type=\"file\"]",
+      "sendButtonSelector": "",
+      "readySelector": "textarea",
+      "userDataDir": ".browser-profile/chatgpt",
+      "headless": false,
+      "allowManualLogin": true,
+      "navigationTimeoutMs": 45000,
+      "readyTimeoutMs": 10000,
+      "responseTimeoutMs": 120000,
+      "manualLoginTimeoutMs": 180000
+    },
+    {
+      "id": "gemini",
+      "name": "Google Gemini",
+      "webUrl": "https://gemini.google.com/app",
+      "promptSelector": "rich-textarea .ql-editor",
+      "responseSelector": "message-content",
+      "uploadSelector": "input[type=\"file\"]",
+      "sendButtonSelector": "button.send-button",
+      "readySelector": "rich-textarea .ql-editor",
+      "userDataDir": ".browser-profile/gemini",
+      "headless": false,
+      "allowManualLogin": true,
+      "navigationTimeoutMs": 45000,
+      "readyTimeoutMs": 10000,
+      "responseTimeoutMs": 120000,
+      "manualLoginTimeoutMs": 180000
+    }
+  ]
+}
