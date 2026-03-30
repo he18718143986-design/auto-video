@@ -21,7 +21,7 @@
 
 | 模块 | 状态 | 说明 |
 |------|------|------|
-| 12 阶段管线 | ✅ 完整 | session → capability → style_dna → research → narrative → script → qa → storyboard → asset → video → tts → render |
+| 12 阶段管线 | ✅ 完整 | session_preparation → capability_assessment → style_dna → research → narrative_map → script → qa → storyboard → asset_generation → scene_video_generation → tts → render |
 | Mock 模式 | ✅ 完整 | 全流程可在无浏览器/AI 的情况下本地跑通 |
 | 浏览器自动化 | ✅ 完整 | Playwright 持久上下文，多配置文件轮换 |
 | 暂停/恢复 | ✅ 完整 | 任意阶段可暂停，后续恢复 |
@@ -29,9 +29,9 @@
 | 从阶段重试 | ✅ 完整 | 复用前序产物，从指定阶段重新开始 |
 | 每日配额 | ✅ 完整 | 可配置的每日运行限制 |
 | 多配置文件轮换 | ✅ 完整 | 手动 / Round-Robin 两种模式 |
-| React UI | ✅ 完整 | 5 个页面全部实现，含实时 SSE 更新 |
+| React UI | ✅ 完整 | 5 个页面全部实现，含实时 SSE 更新与资产浏览 |
 | 后端 API | ✅ 完整 | 20+ 个端点，覆盖所有 CRUD 和控制操作 |
-| 选择器调试器 | ✅ 完整 | 探测 + 截图 + 快照历史 + 差异对比 |
+| 选择器调试器 | ✅ 完整 | 探测 + 截图 + 快照历史；后端提供快照对比 API |
 | TTS 多提供商回退 | ✅ 完整 | OpenAI → 系统 TTS → FFmpeg 音调 |
 | 图像生成回退 | ✅ 完整 | OpenAI → Pollinations |
 | FFmpeg 渲染 | ✅ 完整 | 关键帧 + 语音 + 字幕 → MP4 |
@@ -140,15 +140,22 @@ storyboard ◄── script + styleDna
 
 ```
 runs/<run-id>/
-├── manifest.json              # 运行元数据 + 状态 + 历史
+├── run.json                   # 运行元数据 + 状态 + 历史
 ├── outputs/
 │   ├── session_preparation.json
+│   ├── capability_assessment.txt
 │   ├── capability_assessment.json
+│   ├── style_dna.raw.txt
 │   ├── style_dna.json
+│   ├── research.raw.txt
 │   ├── research.json
+│   ├── narrative_map.raw.txt
 │   ├── narrative_map.json
+│   ├── script.raw.txt
 │   ├── script.json
+│   ├── qa.raw.txt
 │   ├── qa.json
+│   ├── storyboard.raw.txt
 │   ├── storyboard.json
 │   ├── asset_generation.json
 │   ├── video_generation_log.json
@@ -163,10 +170,12 @@ runs/<run-id>/
 │       └── N/ ...
 ├── screenshots/
 │   ├── live/
-│   │   └── latest.jpg         # SSE 实时预览
+│   │   └── latest.{jpg|png}   # SSE 实时预览
 │   └── <stage>-*.jpg          # 各阶段截图
 └── final/
-    └── final_video.mp4        # 最终渲染输出
+    ├── final_video.mp4        # 最终渲染输出
+    ├── render_manifest.json
+    └── subtitles.srt
 ```
 
 ---
@@ -291,8 +300,9 @@ NewRun (/new-run)
 │   │       ├── qa                   → 配置文件下拉
 │   │       └── storyboard           → 配置文件下拉
 │   │
-│   ├── 配额警告 (剩余 ≤ 1 时显示)
-│   │   └── "Only N run(s) remaining today"
+│   ├── 配额信息
+│   │   ├── remaining = 0 → 红色限制警告
+│   │   └── remaining > 0 → 今日已用 / 剩余提示
 │   │
 │   └── [🚀 Start Run] 按钮
 │       ├── 调用 POST /api/runs/start
@@ -301,13 +311,13 @@ NewRun (/new-run)
 │
 └── 右面板: 运行预览
     │
-    ├── 管线概览
-    │   └── 12 阶段列表 (带图标)
+    ├── Execution Path
+    │   └── "12 stages in pipeline"
     │
     ├── 配置信息
     │   ├── Profile: 选中的配置文件名
     │   ├── Provider: 输入的提供商
-    │   └── Mode: Playwright / Mock
+    │   └── Topic: 当前输入或默认 topic
     │
     ├── Stage Routing 表格
     │   └── 阶段 → 配置文件 映射
@@ -315,7 +325,7 @@ NewRun (/new-run)
     └── 警告列表
         ├── Mock 模式提示
         ├── 缺少必填字段提示
-        └── 无配置文件提示
+        └── Provider / Topic 未填写提示
 ```
 
 **数据源**: `useConfig()`, `useQuota()`
@@ -366,17 +376,21 @@ Studio (/studio | /studio/:runId)
 │   │   ├── 自动刷新截图 (activePreviewUrl)
 │   │   └── 无活跃运行: 占位提示
 │   │
-│   ├── 📦 Outputs (产物查看器)
-│   │   ├── 产物标签列表
-│   │   │   ├── Capability Assessment
-│   │   │   ├── Style DNA
-│   │   │   ├── Research
-│   │   │   ├── Narrative Map
-│   │   │   ├── Script
-│   │   │   ├── QA
-│   │   │   ├── Storyboard
-│   │   │   └── Final Video
-│   │   └── JSON 查看区 (格式化显示)
+│   ├── 📦 Outputs (产物浏览器)
+│   │   ├── 顶部摘要
+│   │   │   ├── manifest artifacts 计数
+│   │   │   ├── media files 计数
+│   │   │   ├── screenshots 计数
+│   │   │   └── Only Final Video 开关
+│   │   ├── 左侧分组列表
+│   │   │   ├── Text Artifacts
+│   │   │   ├── Media Files
+│   │   │   └── Screenshots
+│   │   └── 右侧预览面板
+│   │       ├── 文本 / 图片 / 视频 / 音频预览
+│   │       ├── [Download]
+│   │       ├── [Copy Path]
+│   │       └── [Open File]
 │   │
 │   ├── 📅 Timeline (时间线)
 │   │   └── 历史条目列表 (倒序)
@@ -418,7 +432,7 @@ Studio (/studio | /studio/:runId)
         └── completed: "Run completed successfully!"
 ```
 
-**数据源**: `useRuns()` (SSE), `useRun(runId)`, `useConfig()`
+**数据源**: `useRuns()` (SSE), `useRun(runId)`, `useRunDetails(runId)`, `useConfig()`
 **操作**: `api.pauseRun()`, `api.resumeRun()`, `api.retryRun()`, `api.continueHuman()`, `api.saveHandoff()`
 
 ### 4.4 Library — 运行历史浏览
@@ -441,11 +455,17 @@ Library (/library)
 │           └── 点击 → /studio/<runId>
 │
 └── Assets 标签页
-    └── "Asset browsing will be available in a future update."
-        └── 引导: 使用 Studio → Outputs 查看单个运行的产物
+    ├── 左侧 Runs 列表
+    │   ├── 主题
+    │   ├── 状态
+    │   └── 更新时间
+    └── 右侧 Asset Browser
+        ├── 运行标题 + 状态药丸
+        ├── [Open in Studio]
+        └── 复用 RunAssetsPanel 浏览文本、媒体、截图与 final video
 ```
 
-**数据源**: `useRuns()` (SSE)
+**数据源**: `useRuns()` (SSE), `useRunDetails(selectedRunId)`
 **导航**: 点击运行 → `/studio/<runId>`
 
 ### 4.5 Settings — 系统配置管理
@@ -521,14 +541,8 @@ Settings (/settings)
 │   ├── 选择器调试器
 │   │   ├── Profile 下拉选择
 │   │   ├── [▶ Run Debug] 按钮
-│   │   └── 结果表格
-│   │       └── 行 × N
-│   │           ├── 选择器名称
-│   │           ├── CSS 选择器
-│   │           ├── 匹配数量
-│   │           ├── 可见元素数
-│   │           ├── 错误信息
-│   │           └── 示例文本
+│   │   └── 结果区
+│   │       └── JSON 原样展示当前调试结果
 │   │
 │   └── 快照历史
 │       └── 快照列表 (按时间倒序)
@@ -536,6 +550,8 @@ Settings (/settings)
 │               ├── 配置文件 ID
 │               ├── 时间戳
 │               └── 选择器数量
+│
+│   注: `/api/selectors/compare` 已存在，但当前 UI 还没有独立的 diff 面板
 │
 └── 🖥️ System (系统信息)
     │
@@ -565,7 +581,7 @@ Settings (/settings)
 │ (浏览器/    │ /api/   │ (port 3210)      │         │ (12-stage    │
 │  Tauri)     │ events  │                  │         │  orchestor)  │
 │             │         │ 每 1000ms 广播:   │         │              │
-│ useRuns()   │         │ • runs[]         │         │ manifest.json│
+│ useRuns()   │         │ • runs[]         │         │ run.json     │
 │ hook 接收   │         │ • activeRunId    │         │ 每阶段更新    │
 │ 自动更新    │         │ • activeRunPaused│         │              │
 │             │         │ • previewUrl     │         │              │
@@ -590,11 +606,14 @@ React UI                    Node.js Server              文件系统
    │── POST /api/runs/pause ───▶│── control.pause() ──────▶│
    │── POST /api/runs/resume ──▶│── control.resume() ─────▶│
    │                            │                          │
-   │── GET /api/runs/:id ──────▶│── loadRunManifest() ────▶│
-   │◀── RunManifest ───────────│◀─ manifest.json ─────────│
-   │                            │                          │
-   │── GET /runs/.../latest.jpg▶│── serveFile() ──────────▶│
-   │◀── 截图二进制 ────────────│◀─ screenshots/ ──────────│
+│── GET /api/runs/:id ──────▶│── loadRunManifest() ────▶│
+│◀── RunManifest ───────────│◀─ run.json ──────────────│
+│                            │                          │
+│── GET /api/runs/:id/details▶│── loadRunDetails() ────▶│
+│◀── RunDetails ────────────│◀─ outputs/media/final ───│
+│                            │                          │
+│── GET /runs/.../latest.jpg▶│── serveFile() ──────────▶│
+│◀── 截图二进制 ────────────│◀─ screenshots/ ──────────│
 ```
 
 ### Tauri 桌面集成
@@ -647,6 +666,7 @@ React UI                    Node.js Server              文件系统
 │ 🚀 运行管理                                                  │
 │   GET  /api/runs            → 列出全部运行                    │
 │   GET  /api/runs/:id        → 查看运行详情                    │
+│   GET  /api/runs/:id/details → 查看运行产物详情                │
 │   POST /api/runs/start      → 创建新运行                     │
 │   POST /api/runs/pause      → 暂停运行                       │
 │   POST /api/runs/resume     → 恢复运行                       │
@@ -671,8 +691,8 @@ React UI                    Node.js Server              文件系统
 |------|-----------|-----------------|
 | Home | `/api/events` (SSE), `/api/config` | — |
 | NewRun | `/api/config`, `/api/quota` | `/api/runs/start` |
-| Studio | `/api/events` (SSE), `/api/runs/:id`, `/api/config` | `/api/runs/pause`, `/api/runs/resume`, `/api/runs/retry`, `/api/runs/continue-human`, `/api/runs/:id/handoff` |
-| Library | `/api/events` (SSE) | — |
+| Studio | `/api/events` (SSE), `/api/runs/:id`, `/api/runs/:id/details`, `/api/config` | `/api/runs/pause`, `/api/runs/resume`, `/api/runs/retry`, `/api/runs/continue-human`, `/api/runs/:id/handoff` |
+| Library | `/api/events` (SSE), `/api/runs/:id/details` | — |
 | Settings | `/api/config`, `/api/prompts`, `/api/selectors/history`, `/api/quota` | `/api/config`, `/api/prompts/:name`, `/api/selectors/debug` |
 
 ---
@@ -702,4 +722,4 @@ React UI                    Node.js Server              文件系统
 
 ---
 
-*本文档生成于 2026-03-29，反映 auto-video v0.1.0 的当前状态。*
+*本文档更新于 2026-03-30，反映 auto-video-main 当前代码状态。*
